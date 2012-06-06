@@ -5,7 +5,7 @@ if [ -e boot.img ]; then
 fi
 
 rm compile.log
-rm ramdisk.cpio.gz
+rm ramdisk.cpio
 
 # Set Default Path
 TOP_DIR=$PWD
@@ -43,11 +43,11 @@ cp -f $KERNEL_PATH/arch/arm/boot/zImage .
 
 # Create ramdisk.cpio archive
 cd $ROOTFS_PATH
-find . | cpio -o -H newc | gzip > ../ramdisk.cpio.gz
+find . | cpio -o -H newc > ../ramdisk.cpio
 cd ..
 
 # Make boot.img
-./mkbootimg --kernel zImage --ramdisk ramdisk.cpio.gz --board smdk4x12 --base 0x10000000 --pagesize 2048 --ramdiskaddr 0x11000000 -o $KERNEL_PATH/boot.img
+./mkbootimg --kernel zImage --ramdisk ramdisk.cpio --board smdk4x12 --base 0x10000000 --pagesize 2048 --ramdiskaddr 0x11000000 -o $KERNEL_PATH/boot.img
 
 # Copy boot.img
 cp boot.img $KERNEL_PATH/releasetools/zip
