@@ -56,7 +56,7 @@ cp boot.img $KERNEL_PATH/releasetools/tar
 # Creating flashable zip and tar
 cd $KERNEL_PATH
 cd releasetools/zip
-zip -r $KBUILD_BUILD_VERSION.zip *
+zip -0 -r $KBUILD_BUILD_VERSION.zip *
 cd ..
 cd tar
 tar cf $KBUILD_BUILD_VERSION.tar boot.img && ls -lh $KBUILD_BUILD_VERSION.tar
