@@ -246,7 +246,7 @@ static void hotplug_timer(struct work_struct *work)
 	mutex_lock(&hotplug_lock);
 
 	if (!standhotplug_enabled) {
-		printk(KERN_INFO "pm-hotplug: disable cpu auto-hotplug with screen-off\n");
+		printk(KERN_INFO "pm-hotplug: disable cpu auto-hotplug\n");
 		goto off_hotplug;
 	}
 
@@ -257,8 +257,18 @@ static void hotplug_timer(struct work_struct *work)
 
 	/* simone201 multi-core support */
 	if (!hotplug_on) {
-		for(i = cores_on; i < NR_OF_CORES; i++)
-			cpu_down(i);
+		
+		for(i = cores_on; i < NR_OF_CORES; i++) {
+			if(cpu_online(i) == CPU_ON)
+				cpu_down(i);
+		}
+		
+		for(i = 1; i < cores_on; i++) {
+			if (cpu_online(i) == CPU_OFF) {
+				cpu_up(i);
+			}
+		}
+		
 		goto off_hotplug;
 	}
 
@@ -412,7 +422,7 @@ declare_store(hotplug_on) {
   int i = 0;
   
   if (user_lock) {
-	cores_on = 4;
+	cores_on = NR_OF_CORES;
     goto finish;
   }
   
@@ -425,8 +435,8 @@ declare_store(hotplug_on) {
   }
   else if (hotplug_on && strcmp(buf, "off\n") == 0) {
     hotplug_on = 0;
-    cores_on = 4;
-    for(i = 1; i < cores_on; i++) {
+    cores_on = NR_OF_CORES;
+    for(i = 1; i < NR_OF_CORES; i++) {
 		if (cpu_online(i) == 0) {
 			cpu_up(i);
 		}
@@ -469,11 +479,14 @@ declare_store(cores_on) {
   printk("multi_core: nr of cores enabled: %d\n",cores_on);
   
   if(!hotplug_on) {
-	for(i = cores_on; i < NR_OF_CORES; i++)
-		cpu_down(i);
+	for(i = cores_on; i < NR_OF_CORES; i++) {
+		if (cpu_online(i) == CPU_ON) {
+			cpu_down(i);
+		}
+	}
 	
 	for(i = 1; i < cores_on; i++) {
-		if (cpu_online(i) == 0) {
+		if (cpu_online(i) == CPU_OFF) {
 			cpu_up(i);
 		}
 	}
