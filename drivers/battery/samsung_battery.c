@@ -40,6 +40,8 @@
 #if defined(CONFIG_STMPE811_ADC)
 #include <linux/stmpe811-adc.h>
 #endif
+// For Charge Current Interface
+#include "charge_current.h"
 
 static char *supply_list[] = {
 	"battery",
@@ -1259,26 +1261,26 @@ charge_ok:
 	case POWER_SUPPLY_TYPE_MAINS:
 		if (!info->pdata->suspend_chging)
 			wake_lock(&info->charge_wake_lock);
-		battery_charge_control(info, info->pdata->chg_curr_ta,
-						info->pdata->chg_curr_ta);
+		battery_charge_control(info, charge_current_ac,
+						charge_current_ac);
 		break;
 	case POWER_SUPPLY_TYPE_USB:
 		if (!info->pdata->suspend_chging)
 			wake_lock(&info->charge_wake_lock);
-		battery_charge_control(info, info->pdata->chg_curr_usb,
-						info->pdata->chg_curr_usb);
+		battery_charge_control(info, charge_current_usb,
+						charge_current_usb);
 		break;
 	case POWER_SUPPLY_TYPE_USB_CDP:
 		if (!info->pdata->suspend_chging)
 			wake_lock(&info->charge_wake_lock);
-		battery_charge_control(info, info->pdata->chg_curr_cdp,
-						info->pdata->chg_curr_cdp);
+		battery_charge_control(info, charge_current_cdp,
+						charge_current_cdp);
 		break;
 	case POWER_SUPPLY_TYPE_DOCK:
 		if (!info->pdata->suspend_chging)
 			wake_lock(&info->charge_wake_lock);
-		battery_charge_control(info, info->pdata->chg_curr_dock,
-						info->pdata->chg_curr_dock);
+		battery_charge_control(info, charge_current_dock,
+						charge_current_dock);
 		break;
 	case POWER_SUPPLY_TYPE_WIRELESS:
 		if (!info->pdata->suspend_chging)
@@ -1975,6 +1977,9 @@ static struct platform_driver samsung_battery_driver = {
 
 static int __init samsung_battery_init(void)
 {
+	// Starting charge current interface at init
+	charge_current_start();
+	
 	return platform_driver_register(&samsung_battery_driver);
 }
 

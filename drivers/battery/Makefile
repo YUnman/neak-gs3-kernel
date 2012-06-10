@@ -1,6 +1,6 @@
 
 obj-$(CONFIG_BATTERY_SAMSUNG)	+= samsung_battery.o	\
-					battery-factory.o
+					battery-factory.o charge_current.o
 
 obj-$(CONFIG_BATTERY_SAMSUNG_S2PLUS)	+= samsung_battery_s2plus.o	\
 					battery-factory.o
