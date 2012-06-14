@@ -5,7 +5,13 @@
 
 #include <linux/kernel.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/cryptohash.h>
+=======
+#include <linux/bitops.h>
+#include <linux/cryptohash.h>
+#include <asm/unaligned.h>
+>>>>>>> 89058d7... lib/sha1.c: quiet sparse noise about symbol not declared
 
 /* The SHA f()-functions.  */
 
