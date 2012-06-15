@@ -800,10 +800,6 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
 			size_t count, loff_t *ppos, int write)
 {
 	struct mm_struct *mm = file->private_data;
-<<<<<<< HEAD
-=======
-
->>>>>>> ef3bc83... Fix a serious security hazzard.
 	unsigned long addr = *ppos;
 	ssize_t copied;
 	char *page;
@@ -859,11 +855,7 @@ static ssize_t mem_read(struct file *file, char __user *buf,
 }
 
 static ssize_t mem_write(struct file *file, const char __user *buf,
-<<<<<<< HEAD
 			 size_t count, loff_t *ppos)
-=======
-		size_t count, loff_t *ppos)
->>>>>>> ef3bc83... Fix a serious security hazzard.
 {
 	return mem_rw(file, (char __user*)buf, count, ppos, 1);
 }
