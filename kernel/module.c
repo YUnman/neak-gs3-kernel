@@ -1022,12 +1022,11 @@ static int check_version(Elf_Shdr *sechdrs,
 	unsigned int i, num_versions;
 	struct modversion_info *versions;
 
-	if(!strncmp("exfat_", mod->name, 6)) return 1;
-	/* Exporting module didn't supply crcs?  OK, we're already tainted. */
+	/* Exporting module didn't supply crcs? OK, we're already tainted. */
 	if (!crc)
 		return 1;
 
-	/* No versions at all?  modprobe --force does this. */
+	/* No versions at all? modprobe --force does this. */
 	if (versindex == 0)
 		return try_to_force_load(mod, symname) == 0;
 
