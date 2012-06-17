@@ -39,6 +39,8 @@ modules.builtin
 *.orig
 *zImage
 *Image
+boot.img
+ramdisk.cpio
 vmlinux.lds
 vmlinux
 initramfs_data.cpio
