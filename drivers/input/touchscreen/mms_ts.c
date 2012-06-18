@@ -51,6 +51,10 @@
 #include <asm/unaligned.h>
 //#include "mms_ts_fw.h"
 
+#ifdef CONFIG_AOSP_ROM_SUPPORT
+#include "../keyboard/cypress/cypress-touchkey.h"
+#endif
+
 #ifdef CONFIG_INPUT_FBSUSPEND
 #ifdef CONFIG_DRM
 #include <drm/drm_backlight.h>
@@ -891,6 +895,12 @@ static irqreturn_t mms_ts_interrupt(int irq, void *dev_id)
 				, angle, palm);
 #else
 			if (info->finger_state[id] != 0) {
+				
+#ifdef CONFIG_AOSP_ROM_SUPPORT
+				// report state to cypress-touchkey for backlight timeout
+				touchscreen_state_report(0);
+#endif
+				
 #if defined(SEC_TSP_EVENT_DEBUG) && defined(CONFIG_TARGET_LOCALE_KOR)
 				printk(KERN_DEBUG "[TSP] POS[%d](%4d,%4d)[U] tp = %d\n",
 					id, x, y, touch_is_pressed);
@@ -936,6 +946,12 @@ static irqreturn_t mms_ts_interrupt(int irq, void *dev_id)
 #else
 		if (info->finger_state[id] == 0) {
 			info->finger_state[id] = 1;
+
+#ifdef CONFIG_AOSP_ROM_SUPPORT
+				// report state to cypress-touchkey for backlight timeout
+				touchscreen_state_report(1);
+#endif			
+			
 #if defined(SEC_TSP_EVENT_DEBUG) && defined(CONFIG_TARGET_LOCALE_KOR)
 			printk(KERN_DEBUG "[TSP] POS[%d](%4d,%4d)[D] tp = %d\n",
 					id, x, y, touch_is_pressed);
