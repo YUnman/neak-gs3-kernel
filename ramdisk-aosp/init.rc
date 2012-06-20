@@ -201,6 +201,10 @@ on post-fs-data
 # Include extra init file
     import /system/etc/init.local.rc
 
+# Insmod exFAT modules
+	insmod /lib/modules/exfat_core.ko
+	insmod /lib/modules/exfat_fs.ko
+
 on boot
 # basic network init
     ifup lo

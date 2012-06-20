@@ -1,0 +1,12 @@
+#!/sbin/busybox sh
+
+export _PATH="$PATH"
+export PATH=/sbin
+
+busybox cd /
+busybox rm /init
+
+busybox mv -f /init-cyano /init
+
+export PATH="${_PATH}"
+exec /init
