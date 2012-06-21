@@ -292,7 +292,7 @@ static mali_bool set_mali_dvfs_status(u32 step,mali_bool boostup)
 
 	/* lock/unlock CPU freq by Mali */
 	if (mali_dvfs[step].clock == 440)
-		err = cpufreq_lock_by_mali(1100);
+		err = cpufreq_lock_by_mali(1200);
 	else
 		cpufreq_unlock_by_mali();
 
@@ -657,7 +657,7 @@ int change_dvfs_tableset(int change_clk, int change_step)
 
 		/* lock/unlock CPU freq by Mali */
 		if (mali_dvfs[change_step].clock == 440)
-			err = cpufreq_lock_by_mali(1100);
+			err = cpufreq_lock_by_mali(1200);
 		else
 			cpufreq_unlock_by_mali();
 	}
