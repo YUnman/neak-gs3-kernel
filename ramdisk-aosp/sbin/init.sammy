@@ -1,7 +1,0 @@
-#!/sbin/busybox sh
-
-/sbin/busybox rm /init
-/sbin/busybox rm /init-cyano
-/sbin/busybox mv /init-sammy /init
-cd /
-exec /init

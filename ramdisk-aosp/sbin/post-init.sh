@@ -85,6 +85,10 @@ echo "10" > /proc/sys/fs/lease-break-time;
 /sbin/busybox sysctl -w kernel.sem="500 512000 100 2048";
 /sbin/busybox sysctl -w kernel.shmmax=268435456;
 
+# Insmod exFAT modules
+	/sbin/busybox insmod /lib/modules/exfat_core.ko
+	/sbin/busybox insmod /lib/modules/exfat_fs.ko
+
 # Doing some cleanup before init.d support & neak options
     /sbin/busybox sh /sbin/near/cleanup.sh
 	
