@@ -534,7 +534,7 @@ static struct regulator_init_data max77686_buck4_data = {
 #ifdef CONFIG_SLP
 		.max_uV = 1100000,
 #else
-		.max_uV = 1075000,
+		.max_uV = 1200000,
 #endif
 		.boot_on = 1,
 		.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE |
