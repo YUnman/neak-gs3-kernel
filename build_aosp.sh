@@ -4,8 +4,13 @@ if [ -e boot.img ]; then
 	rm boot.img
 fi
 
-rm compile.log
-rm ramdisk.cpio
+if [ -e compile.log ]; then
+	rm compile.log
+fi
+
+if [ -e ramdisk.cpio ]; then
+	rm ramdisk.cpio
+fi
 
 # Set Default Path
 TOP_DIR=$PWD
