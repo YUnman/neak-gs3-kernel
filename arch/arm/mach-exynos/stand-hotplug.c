@@ -409,7 +409,7 @@ declare_show(version) {
 }
 
 declare_show(author) {
-  return sprintf(buf, "simone201\n");
+  return sprintf(buf, "simone201 and tegrak\n");
 }
 
 declare_show(hotplug_on) {
