@@ -16,4 +16,9 @@ if [ -e /system/etc/init.d/S98CFS ]; then
 	/sbin/busybox rm /system/etc/init.d/S98CFS
 fi;
 
+# Creating init.d folder if it doesn't exist
+if [ ! -d /system/etc/init.d ]; then
+	/sbin/busybox mkdir /system/etc/init.d
+fi;
+
 /sbin/busybox mount -o remount,ro /system
