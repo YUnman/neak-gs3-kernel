@@ -22,7 +22,7 @@ KERNEL_PATH="/home/simone/neak-gs3"
 TOOLCHAIN="/home/simone/android/system/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3/bin/arm-eabi-"
 ROOTFS_PATH="/home/simone/neak-gs3/ramdisk-samsung"
 
-export KBUILD_BUILD_VERSION="N.E.A.K-S3-1.0x"
+export KBUILD_BUILD_VERSION="N.E.A.K-S3-1.1x"
 export KERNELDIR=$KERNEL_PATH
 
 export USE_SEC_FIPS_MODE=true
