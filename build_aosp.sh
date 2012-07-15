@@ -18,8 +18,8 @@ KERNEL_PATH="/home/simone/neak-gs3"
 
 # Set toolchain and root filesystem path
 #TOOLCHAIN="/home/simone/arm-2009q3/bin/arm-none-linux-gnueabi-"
-#TOOLCHAIN="/home/simone/android-toolchain-eabi/bin/arm-eabi-"
-TOOLCHAIN="/home/simone/android/system/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3/bin/arm-eabi-"
+TOOLCHAIN="/home/simone/android-toolchain-eabi-4.7/bin/arm-eabi-"
+#TOOLCHAIN="/home/simone/android/system/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3/bin/arm-eabi-"
 ROOTFS_PATH="/home/simone/neak-gs3/ramdisk-aosp"
 
 export KBUILD_BUILD_VERSION="N.E.A.K-S3-1.1x"
