@@ -47,9 +47,9 @@ echo $(date) START of post-init.sh
   echo "1" > /proc/sys/net/ipv4/tcp_sack;
   echo "1" > /proc/sys/net/ipv4/tcp_tw_recycle;
   echo "1" > /proc/sys/net/ipv4/tcp_window_scaling;
-  echo "5" > /proc/sys/net/ipv4/tcp_keepalive_probes;
-  echo "30" > /proc/sys/net/ipv4/tcp_keepalive_intvl;
-  echo "30" > /proc/sys/net/ipv4/tcp_fin_timeout;
+  echo "2" > /proc/sys/net/ipv4/tcp_syn_retries;
+  echo "2" > /proc/sys/net/ipv4/tcp_synack_retries;
+  echo "10" > /proc/sys/net/ipv4/tcp_fin_timeout;
   echo "404480" > /proc/sys/net/core/wmem_max;
   echo "404480" > /proc/sys/net/core/rmem_max;
   echo "256960" > /proc/sys/net/core/rmem_default;
@@ -82,9 +82,13 @@ echo "10" > /proc/sys/fs/lease-break-time;
 /sbin/busybox sysctl -w kernel.sem="500 512000 100 2048";
 /sbin/busybox sysctl -w kernel.shmmax=268435456;
 
-# Insmod exFAT modules
-	/sbin/busybox insmod /lib/modules/exfat_core.ko
-	/sbin/busybox insmod /lib/modules/exfat_fs.ko
+# Turn off debugging for certain modules
+  echo "0" > /sys/module/wakelock/parameters/debug_mask
+  echo "0" > /sys/module/userwakelock/parameters/debug_mask
+  echo "0" > /sys/module/earlysuspend/parameters/debug_mask
+  echo "0" > /sys/module/alarm/parameters/debug_mask
+  echo "0" > /sys/module/alarm_dev/parameters/debug_mask
+  echo "0" > /sys/module/binder/parameters/debug_mask
 
 # Doing some cleanup before init.d support & neak options
     /sbin/busybox sh /sbin/near/cleanup.sh
