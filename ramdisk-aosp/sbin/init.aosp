@@ -6,6 +6,10 @@ export PATH=/sbin
 busybox cd /
 busybox rm /init
 
+if [ -f /system/framework/uiautomator.jar ]; then
+	busybox cp -f /etc/jb-cyano/* /
+fi;
+
 busybox mv -f /init-cyano /init
 
 export PATH="${_PATH}"
