@@ -8,12 +8,6 @@ cd /
 /sbin/busybox mknod /dev/block/mmcblk0p9 b 179 9
 /sbin/busybox mount -t ext4 /dev/block/mmcblk0p9 /system
 
-if busybox grep -q 1 /sys/class/power_supply/battery/batt_lp_charging ; then
-  # low power mode
-  /sbin/busybox cp -f lpm.rc init.rc
-  /sbin/busybox rm -f init.smdk4x12.rc
-fi
-
 if [ ! -d /system/lib/modules ]; then
 	/sbin/busybox mount -o remount,rw /system
 	/sbin/busybox mkdir /system/lib/modules
