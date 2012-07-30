@@ -1567,9 +1567,13 @@ static int __init init(void)
 	if (!dev)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+	dev->functions = supported_functions;
+=======
     dev->disable_depth = 1;
 	if(!romtype) dev->functions = supported3sung_functions;
 	else dev->functions = supported_functions;
+>>>>>>> ad2f562... fix adb root
 	INIT_LIST_HEAD(&dev->enabled_functions);
 	INIT_WORK(&dev->work, android_work);
 	mutex_init(&dev->mutex);
