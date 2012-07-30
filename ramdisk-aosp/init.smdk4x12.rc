@@ -16,10 +16,6 @@ on early-init
 
     mkdir /efs
 
-# ko files for exfat
-    insmod /system/lib/modules/exfat_core.ko
-    insmod /system/lib/modules/exfat_fs.ko
-
 # ko files for FM Radio
     insmod /system/lib/modules/Si4709_driver.ko
 
