@@ -724,6 +724,19 @@ void mdnie_late_resume(struct early_suspend *h)
 #endif
 #endif
 
+<<<<<<< HEAD
+=======
+//gm
+void mdnie_toggle_negative(void)
+{
+	mutex_lock(&g_mdnie->lock);
+	g_mdnie->negative = !g_mdnie->negative;
+	mutex_unlock(&g_mdnie->lock);
+
+	set_mdnie_value(g_mdnie, 0);
+}
+
+>>>>>>> 85840aa... mdnie: fix the problem because of the changed function signature in update3 sources
 static int mdnie_probe(struct platform_device *pdev)
 {
 #if defined(CONFIG_FB_MDNIE_PWM)
