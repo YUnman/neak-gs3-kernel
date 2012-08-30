@@ -36,6 +36,23 @@ echo $(date) START of post-init.sh
   echo "200" > /proc/sys/vm/dirty_expire_centisecs
   echo "0" > /proc/sys/vm/swappiness
 
+# Pegasus CPU hotplug tweaks - thx to hardcore
+  echo "500000" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_1_1
+  echo "800000" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_1
+  echo "800000" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_1
+  echo "400000" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_0
+  echo "600000" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_0
+  echo "600000" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_4_0
+
+  echo "100" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_1_1
+  echo "100" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_2_0
+  echo "200" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_2_1
+  echo "200" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_3_0
+  echo "300" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_3_1
+  echo "300" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_4_0
+
+  echo "10" > /sys/devices/system/cpu/cpufreq/pegasusq/cpu_down_rate
+
 # SD cards (mmcblk) read ahead tweaks
   echo "1024" > /sys/devices/virtual/bdi/179:0/read_ahead_kb
   echo "1024" > /sys/devices/virtual/bdi/179:16/read_ahead_kb
