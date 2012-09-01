@@ -32,12 +32,6 @@ typedef struct mali_dvfs_thresholdTag{
 	unsigned int downthreshold;
 	unsigned int upthreshold;
 }mali_dvfs_threshold_table;
-typedef struct mali_runtime_resumeTag{
-	int clk;
-	int vol;
-}mali_runtime_resume_table;
-extern mali_runtime_resume_table mali_runtime_resume;
-
 extern mali_dvfs_table mali_dvfs[4];
 extern mali_dvfs_threshold_table mali_dvfs_threshold[4];
 
@@ -67,23 +61,7 @@ static ssize_t gpu_voltage_store(struct device *dev, struct device_attribute *at
 		if(ret==4)
 		    mali_dvfs[i].vol=gv[i];
 	}
-<<<<<<< HEAD
 	return count;
-=======
-	
-    /* safety floor and ceiling - netarchy */
-    for( i = 0; i < 4; i++ ) {
-        if (gv[i] < MIN_VOLTAGE_GPU) {
-            gv[i] = MIN_VOLTAGE_GPU;
-        }
-        else if (gv[i] > MAX_VOLTAGE_GPU) {
-            gv[i] = MAX_VOLTAGE_GPU;
-    	}
-		mali_dvfs[i].vol=gv[i];
-    }
-	mali_runtime_resume.vol = mali_dvfs[1].vol;
-	return count;	
->>>>>>> 511cbde... mali: when gpu voltage is changed apply voltage value of the second step to resume voltage
 }
 
 static DEVICE_ATTR(gpu_control, S_IRUGO | S_IWUGO, gpu_voltage_show, gpu_voltage_store);
