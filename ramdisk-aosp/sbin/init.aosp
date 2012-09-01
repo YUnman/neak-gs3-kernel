@@ -11,8 +11,8 @@ busybox rm /init
 /sbin/busybox mount -t ext4 /dev/block/mmcblk0p9 /system
 
 if [ -f /system/framework/uiautomator.jar ]; then
-	/sbin/busybox cp -f /etc/jb-cyano/* /
-	/sbin/busybox cp -f /etc/jb-cyano-adb/adbd /sbin/adbd
+	/sbin/busybox cp -f /res/misc/jb-cyano/* /
+	/sbin/busybox cp -f /res/misc/jb-cyano-adb/adbd /sbin/adbd
 fi;
 
 /sbin/busybox umount /system

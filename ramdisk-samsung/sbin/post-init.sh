@@ -51,11 +51,9 @@ echo $(date) START of post-init.sh
   echo "300" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_3_1
   echo "300" > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_4_0
 
-  echo "10" > /sys/devices/system/cpu/cpufreq/pegasusq/cpu_down_rate
-
 # SD cards (mmcblk) read ahead tweaks
-  echo "1024" > /sys/devices/virtual/bdi/179:0/read_ahead_kb
-  echo "1024" > /sys/devices/virtual/bdi/179:16/read_ahead_kb
+  echo "512" > /sys/devices/virtual/bdi/179:0/read_ahead_kb
+  echo "512" > /sys/devices/virtual/bdi/179:16/read_ahead_kb
   echo "512" > /sys/devices/virtual/bdi/default/read_ahead_kb
 
 # TCP tweaks
