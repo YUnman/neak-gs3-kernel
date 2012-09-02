@@ -26,13 +26,13 @@
 #include <plat/regs-dsim.h>
 #include <mach/dsim.h>
 #include <mach/mipi_ddi.h>
+
+#include <linux/device.h> 
+#include <linux/miscdevice.h>
+
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #include <linux/earlysuspend.h>
 #endif
-
-// Brightness Curve
-#include <linux/device.h> 
-#include <linux/miscdevice.h>
 
 #include "s5p-dsim.h"
 #include "s3cfb.h"
@@ -280,93 +280,84 @@ read_retry:
 	return ret;
 }
 
-#ifdef CONFIG_AID_DIMMING
-
-int min_gamma = 0, max_gamma = 20, min_bl = 40;
-
-static int get_backlight_level_from_brightness(int bl)
+int min_gamma = 0, max_gamma = GAMMA_MAX - 1, min_bl = 40;
+static int get_backlight_level_from_brightness(int brightness)
 {
-	int gamma_value = 0;
-	int gamma_val_x10 = 0;
+	int gamma_value =0;
+	int gamma_val_x10 =0;
 
-	if(bl >= min_bl) {
-		gamma_val_x10 = 10 *(max_gamma-1-min_gamma)*bl/(MAX_BRIGHTNESS-min_bl) 
-						+ (10 - 10*(max_gamma-1-min_gamma)*(min_bl)/(MAX_BRIGHTNESS-min_bl));
-		gamma_value = (gamma_val_x10 +5)/10 + min_gamma;
-	} else
-		gamma_value = min_gamma;
-		
-	if(gamma_value > MAX_GAMMA) 
-		gamma_value = MAX_GAMMA;
-	else if(gamma_value < min_gamma) 
-		gamma_value = min_gamma;
-	
+	if(brightness >= min_bl){
+		gamma_val_x10 = 10 *(max_gamma-1-min_gamma)*brightness/(MAX_BRIGHTNESS-min_bl) 
+		    + (10 - 10*(max_gamma-1-min_gamma)*(min_bl)/(MAX_BRIGHTNESS-min_bl));
+		gamma_value=(gamma_val_x10 +5)/10 + min_gamma;
+	}else{
+		gamma_value =min_gamma;
+	}
+	if(gamma_value > max_gamma) gamma_value = max_gamma;
+	else if(gamma_value < min_gamma) gamma_value = min_gamma;
 	return gamma_value;
 }
 
+#ifdef CONFIG_AID_DIMMING
+static int s6e8ax0_aid_parameter_ctl(struct lcd_info *lcd , u8 force)
+{
+	if (likely(lcd->support_aid)) {
+		if ((lcd->f8[lcd->bl][0x12] != lcd->f8[lcd->current_bl][0x12]) ||
+			(lcd->f8[lcd->bl][0x01] != lcd->f8[lcd->current_bl][0x01]) || (force))
+			s6e8ax0_write(lcd, lcd->f8[lcd->bl], AID_PARAM_SIZE);
+	}
+
+	return 0;
+}
+#endif
+
 #define declare_show(filename) \
 	static ssize_t show_##filename(struct device *dev, struct device_attribute *attr, char *buf)
-	
+
 #define declare_store(filename) \
 	static ssize_t store_##filename(\
 		struct device *dev, struct device_attribute *attr, const char *buf, size_t size)
-		
+
 declare_show(author) {
-  return sprintf(buf, "gm & simone201\n");
+	return sprintf(buf, "Siyah\n");
 }
 
 declare_show(min_gamma) {
-  return sprintf(buf, "%d\n", min_gamma);
+	return sprintf(buf, "%d\n", min_gamma);
 }
-
 declare_show(max_gamma) {
-  return sprintf(buf, "%d\n", max_gamma);
+	return sprintf(buf, "%d\n", max_gamma);
 }
-
 declare_show(min_bl) {
-  return sprintf(buf, "%d\n", min_bl);
+	return sprintf(buf, "%d\n", min_bl);
 }
 
-declare_store(min_gamma) {  
-  int val;
-
-  if(sscanf(buf,"%d",&val) == 1) {
-    if(val > 23) 
-		val = 23;
-    else if(val < 0) 
-		val = 0;
-    min_gamma = val;
-  }
-
-  return size;
+declare_store(min_gamma) {	
+	int val;
+	if(sscanf(buf,"%d",&val)==1) {
+		if(val>GAMMA_MAX - 1) val=GAMMA_MAX - 1;
+		else if(val<0) val=0;
+		min_gamma = val;
+	}
+	return size;
 }
-
-declare_store(max_gamma) {  
-  int val;
-
-  if(sscanf(buf,"%d",&val) == 1) {
-    if(val > 24)
-		val = 24;
-    else if(val < 0)
-		val = 0;
-    max_gamma = val;
-  }
-
-  return size;
+declare_store(max_gamma) {	
+	int val;
+	if(sscanf(buf,"%d",&val)==1) {
+		if(val>GAMMA_MAX - 1) val=GAMMA_MAX - 1;
+		else if(val<0) val=0;
+		max_gamma = val;
+	}
+	return size;
 }
-
-declare_store(min_bl) {  
-  int val;
-
-  if(sscanf(buf,"%d",&val)==1) {
-    if(val > MAX_BRIGHTNESS) 
-		val = MAX_BRIGHTNESS;
-	else if(val < 0) 
-		val = 0;
-    min_bl = val;
-  }
-  
-  return size;
+declare_store(min_bl) {	
+	int val;
+	if(sscanf(buf,"%d",&val)==1) {
+		if(val>200) val=200;
+		else if(val<0) val=0;
+		min_bl = val;
+	}
+	return size;
 }
 
 #define declare_attr_rw(filename, perm) \
@@ -375,7 +366,7 @@ declare_store(min_bl) {
 	static DEVICE_ATTR(filename, perm, show_##filename, NULL)
 #define declare_attr_wo(filename, perm) \
 	static DEVICE_ATTR(filename, perm, NULL, store_##filename)
-	
+
 declare_attr_ro(author, 0444);
 declare_attr_rw(min_gamma, 0666);
 declare_attr_rw(max_gamma, 0666);
@@ -390,49 +381,13 @@ static struct attribute *brightness_curve_attributes[] = {
 };
 
 static struct attribute_group brightness_curve_group = {
-	.attrs  = brightness_curve_attributes,
+		.attrs  = brightness_curve_attributes,
 };
 
 static struct miscdevice brightness_curve_device = {
-	.minor = MISC_DYNAMIC_MINOR,
-	.name = "brightness_curve",
+		.minor = MISC_DYNAMIC_MINOR,
+		.name = "brightness_curve",
 };
-
-static int s6e8ax0_aid_parameter_ctl(struct lcd_info *lcd , u8 force)
-{
-	if (likely(lcd->support_aid)) {
-		if ((lcd->f8[lcd->bl][0x12] != lcd->f8[lcd->current_bl][0x12]) ||
-			(lcd->f8[lcd->bl][0x01] != lcd->f8[lcd->current_bl][0x01]) || (force))
-			s6e8ax0_write(lcd, lcd->f8[lcd->bl], AID_PARAM_SIZE);
-	}
-
-	return 0;
-}
-#else
-static int get_backlight_level_from_brightness(int brightness)
-{
-	int backlightlevel;
-
-	/* brightness setting from platform is from 0 to 255
-	 * But in this driver, brightness is only supported from 0 to 24 */
-
-	switch (brightness) {
-	case 0 ... 29:
-		backlightlevel = GAMMA_30CD;
-		break;
-	case 30 ... 254:
-		backlightlevel = (brightness - candela_table[0]) / 10;
-		break;
-	case 255:
-		backlightlevel = ARRAY_SIZE(candela_table) - 1;
-		break;
-	default:
-		backlightlevel = DEFAULT_GAMMA_LEVEL;
-		break;
-	}
-	return backlightlevel;
-}
-#endif
 
 static int s6e8ax0_gamma_ctl(struct lcd_info *lcd)
 {
@@ -1542,15 +1497,16 @@ static int s6e8ax0_init(void)
 	
 	ret = misc_register(&brightness_curve_device);
 	if (ret) {
+	   printk(KERN_ERR "failed at(%d)\n", __LINE__);
+	}
+
+	ret = sysfs_create_group(&brightness_curve_device.this_device->kobj, 
+			&brightness_curve_group);
+	if (ret)
+	{
 		printk(KERN_ERR "failed at(%d)\n", __LINE__);
 	}
-	
-	ret = sysfs_create_group(&brightness_curve_device.this_device->kobj,
-		&brightness_curve_group);
-	if (ret) {
-		printk(KERN_ERR "failed at(%d)\n", __LINE__);
-	}
-	
+
 	return s5p_dsim_register_lcd_driver(&s6e8ax0_mipi_driver);
 }
 
