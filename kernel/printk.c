@@ -66,7 +66,7 @@ extern void printascii(char *);
 #define DEFAULT_CONSOLE_LOGLEVEL 7 /* anything MORE serious than KERN_DEBUG */
 
 // Speedmod - another way of disabling printk
-#define SPEEDMOD_DISABLE_PRINTK
+//#define SPEEDMOD_DISABLE_PRINTK
 
 DECLARE_WAIT_QUEUE_HEAD(log_wait);
 
