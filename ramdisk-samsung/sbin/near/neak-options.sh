@@ -42,11 +42,11 @@ fi;
 
 # AFTR Idle Mode
 if [ -e /data/neak/aftridle ]; then
-	echo "aftr idle mode enabled"
+	echo "aftr+lpa idle mode enabled"
 	echo "3" > /sys/module/cpuidle_exynos4/parameters/enable_mask
 else
-	echo "aftr idle mode disabled - using idle only"
-	echo "1" > /sys/module/cpuidle_exynos4/parameters/enable_mask
+	echo "aftr+lpa idle mode disabled - using idle+lpa"
+	echo "2" > /sys/module/cpuidle_exynos4/parameters/enable_mask
 fi;
 
 # EXT4 Speed Tweaks
